@@ -1,35 +1,61 @@
 module "labels" {
-  source  = "git::https://github.com/slovink/terraform-google-labels.git"
-
+  source      = "git@github.com:slovink/terraform-google-labels.git"
   name        = var.name
   environment = var.environment
   label_order = var.label_order
+  managedby   = var.managedby
+  repository  = var.repository
 }
 
-resource "google_service_account" "default" {
-  count = var.service_account_enabled && var.module_enabled ? 1 : 0
+data "google_client_config" "current" {
+}
 
-  account_id   = module.labels.id
-  display_name = module.labels.id
+#####==============================================================================
+##### Allows management of a Google Cloud service account.
+#####==============================================================================
+resource "google_service_account" "service_account" {
+  count        = var.service_account_enabled && var.enabled ? 1 : 0
+  account_id   = var.account_id
+  display_name = format("%s-service-account", module.labels.id)
   description  = var.description
-  project      = var.project_id
+  disabled     = var.disabled
+  project      = data.google_client_config.current.project
+
 }
 
-resource "google_service_account_key" "default" {
-  count = var.service_account_key_enabled && var.module_enabled ? 1 : 0
-
-  service_account_id = join("", google_service_account.default.*.name)
-  key_algorithm      = var.key_algorithm
+#####==============================================================================
+##### Creates and manages service account keys, which allow the use of a service
+##### account with Google Cloud.
+#####==============================================================================
+#tfsec:ignore:GEN003
+resource "google_service_account_key" "mykey" {
+  count              = var.key_enabled && var.enabled ? 1 : 0
+  service_account_id = join("", google_service_account.service_account[*].name)
   public_key_type    = var.public_key_type
   private_key_type   = var.private_key_type
-  public_key_data    = var.public_key_data
   keepers            = var.keepers
+  key_algorithm      = var.key_algorithm
 }
 
+#####==============================================================================
+##### When managing IAM roles, you can treat a service account either as a resource
+##### or as an identity.
+#####==============================================================================
 resource "google_service_account_iam_binding" "admin-account-iam" {
-  count = var.google_service_account_iam_binding_enabled && var.module_enabled ? 1 : 0
-
-  service_account_id = join("", google_service_account.default.*.name)
-  role               = "roles/iam.serviceAccountUser"
-  members            = var.members
+  count              = var.iam_binding_enabled && var.enabled ? 1 : 0
+  service_account_id = join("", google_service_account.service_account[*].name)
+  role               = var.roles[0]
+  members = [
+    "serviceAccount:${google_service_account.service_account[count.index].email}"
+  ]
+}
+#####==============================================================================
+##### Four different resources help you manage your IAM policy for a project.
+#####==============================================================================
+#tfsec:ignore:google-iam-no-project-level-service-account-impersonation
+resource "google_project_iam_member" "default" {
+  count   = var.iam_member_enabled && var.enabled ? 1 : 0
+  project = data.google_client_config.current.project
+  role    = var.roles[0]
+  member  = format("serviceAccount:%s", join("", google_service_account.service_account[*].email))
 }

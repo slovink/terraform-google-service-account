@@ -1,3 +1,9 @@
+variable "name" {
+  type        = string
+  default     = ""
+  description = "Name of the resource. Provided by the client when the resource is created. "
+}
+
 variable "environment" {
   type        = string
   default     = ""
@@ -6,75 +12,74 @@ variable "environment" {
 
 variable "label_order" {
   type        = list(any)
-  default     = []
+  default     = ["name", "environment"]
   description = "Label order, e.g. sequence of application name and environment `name`,`environment`,'attribute' [`webserver`,`qa`,`devops`,`public`,] ."
 }
 
-variable "name" {
-  type    = string
-  default = ""
+variable "managedby" {
+  type        = string
+  default     = "slovink"
+  description = "ManagedBy, eg 'slovink'."
 }
 
-
-variable "module_enabled" {
-  type        = bool
-  default     = true
-  description = "Flag to control the service_account_enabled creation."
+variable "repository" {
+  type        = string
+  default     = "https://github.com/slovink/terraform-google-service-account"
+  description = "Terraform current module repo"
 }
 
 variable "service_account_enabled" {
   type        = bool
   default     = true
-  description = "Flag to control the service_account_enabled creation."
+  description = "Set to false to prevent the module from creating any resources."
 }
 
-variable "project_id" {
+variable "enabled" {
+  type        = bool
+  default     = true
+  description = "A boolean flag to enable/disable service-account ."
+}
+
+variable "account_id" {
   type        = string
-  default     = ""
-  description = "The project in which the resource belongs. If it is not provided, the provider project is used."
+  default     = "service-account-id"
+  description = "(Required) The account id that is used to generate the service account email address and a stable unique id."
 }
 
 variable "description" {
   type        = string
-  default     = ""
-  description = "A text description of the service account."
+  default     = "ManagedBy, 'slovink' "
+  description = " (Optional) A text description of the service account. "
 }
 
-
-variable "display_name" {
-  type        = string
-  default     = ""
-  description = "A text description of the service account."
+variable "disabled" {
+  type        = bool
+  default     = false
+  description = " (Optional) Whether a service account is disabled or not. Defaults to false."
 }
 
-variable "service_account_key_enabled" {
+variable "key_enabled" {
   type        = bool
   default     = true
-  description = "Flag to control the service_account_enabled creation."
-}
-
-variable "key_algorithm" {
-  type        = string
-  default     = "KEY_ALG_RSA_2048"
-  description = "The algorithm used to generate the key. Possible values: `KEY_ALG_UNSPECIFIED`, `KEY_ALG_RSA_1024`, `KEY_ALG_RSA_2048`"
+  description = "Set to false to prevent the module from creating any resources."
 }
 
 variable "public_key_type" {
   type        = string
   default     = "TYPE_X509_PEM_FILE"
-  description = "The output format of the public key requested."
+  description = " (Optional) The output format of the public key requested. TYPE_X509_PEM_FILE is the default output format."
 }
-
+#tfsec:ignore:GEN001
 variable "private_key_type" {
   type        = string
   default     = "TYPE_GOOGLE_CREDENTIALS_FILE"
-  description = "The output format of the private key."
+  description = "(Optional) The output format of the private key. TYPE_GOOGLE_CREDENTIALS_FILE is the default output format."
 }
 
-variable "public_key_data" {
+variable "key_algorithm" {
   type        = string
-  default     = null
-  description = "Public key data to create a service account key for given service account. The expected format for this field is a base64 encoded X509_PEM and it conflicts with `public_key_type` and `private_key_type`."
+  default     = "KEY_ALG_RSA_2048"
+  description = " (Optional) The algorithm used to generate the key. KEY_ALG_RSA_2048 is the default algorithm. "
 }
 
 variable "keepers" {
@@ -83,14 +88,20 @@ variable "keepers" {
   description = "Arbitrary map of values that, when changed, will trigger a new key to be generated."
 }
 
-variable "google_service_account_iam_binding_enabled" {
+variable "iam_binding_enabled" {
   type        = bool
   default     = true
-  description = "Flag to control the service_account_enabled creation."
+  description = "Set to false to prevent the module from creating any resources."
 }
 
-variable "members" {
-  type    = list(any)
-  default = []
-  description = "Identities that will be granted the privilege in role."
+variable "iam_member_enabled" {
+  type        = bool
+  default     = true
+  description = "Set to false to prevent the module from creating any resources."
+}
+
+variable "roles" {
+  type        = list(string)
+  default     = []
+  description = "The role that should be applied. "
 }
