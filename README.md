@@ -20,7 +20,7 @@ To use this module, you should have Terraform installed and configured for GCP. 
 ## Example: service-account
 ```hcl
 module "service-account" {
-  source           = "https://github.com/slovink/terraform-google-service-account.git"
+  source           = "git::https://github.com/slovink/terraform-google-service-account.git?ref=v1.0.0"
   name             = "ops"
   environment      = "test"
   key_algorithm    = "KEY_ALG_RSA_2048"
@@ -52,13 +52,13 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.84.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 3.50, < 5.11.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_labels"></a> [labels](#module\_labels) | git@github.com:slovink/terraform-google-labels.git | n/a |
+| <a name="module_labels"></a> [labels](#module\_labels) | git::https://github.com/slovink/terraform-google-labels.git | v1.0.2 |
 
 ## Resources
 
