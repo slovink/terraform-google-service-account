@@ -8,7 +8,7 @@ provider "google" {
 ##### service-account module call .
 #####==============================================================================
 module "service-account" {
-  source           = "./../"
+  source           = "../"
   name             = "ops"
   environment      = "test"
   key_algorithm    = "KEY_ALG_RSA_2048"
