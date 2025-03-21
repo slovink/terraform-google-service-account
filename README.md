@@ -76,29 +76,29 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.7.4 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.50, < 5.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 5.45.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 3.50, < 5.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.45.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_labels"></a> [labels](#module\_labels) | git::https://github.com/slovink/terraform-google-labels.git | v1.0.0 |
+| <a name="module_labels"></a> [labels](#module\_labels) | git::https://github.com/slovink/terraform-google-labels.git | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [google_project_iam_member.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
-| [google_service_account.service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
-| [google_service_account_iam_binding.admin-account-iam](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) | resource |
-| [google_service_account_key.mykey](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_key) | resource |
-| [google_client_config.current](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config) | data source |
+| [google_project_iam_member.default](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/resources/project_iam_member) | resource |
+| [google_service_account.service_account](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/resources/service_account) | resource |
+| [google_service_account_iam_binding.admin-account-iam](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/resources/service_account_iam_binding) | resource |
+| [google_service_account_key.mykey](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/resources/service_account_key) | resource |
+| [google_client_config.current](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/data-sources/client_config) | data source |
 
 ## Inputs
 
