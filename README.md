@@ -88,7 +88,7 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_labels"></a> [labels](#module\_labels) | git::https://github.com/slovink/terraform-google-labels.git | n/a |
+| <a name="module_labels"></a> [labels](#module\_labels) | git::https://github.com/slovink/terraform-google-labels.git | v1.0.0 |
 
 ## Resources
 
