@@ -65,42 +65,49 @@ stages:
               cp $(development.secureFilePath) .
             displayName: Copy service account key to working dir
 
-  steps:
-    - task: TerraformInstaller@1
-      displayName: Install Terraform
-      inputs:
-        terraformVersion: $(terraformVersion)
+  - stage: service_account
+    dependsOn: Prepare
+    displayName: Service Account Provisioning
+    jobs:
+      - job: service_account
+        displayName: Terraform Job
+        steps:
+          - task: TerraformInstaller@1
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: $(terraformVersion)
 
-    - script: |
-        terraform version
-      displayName: Verify Terraform
+          - script: |
+              echo "##vso[task.prependpath]$(Agent.ToolsDirectory)/terraform/$(terraformVersion)/x64"
+              terraform version
+            displayName: Set Terraform Path Again in Job
 
-    - task: TerraformCLI@0
-      displayName: Terraform Init
-      inputs:
-        command: init
-        workingDirectory: $(System.DefaultWorkingDirectory)/example
-        backendType: gcs
-        backendGcsCredentials: $(authenticationFileName)
-        backendGcsBucket: $(gcp_bucket)
-        backendGcsPrefix: $(projectId)/$(platformName)/network.infrax.tfstate
+          - task: TerraformCLI@0
+            displayName: Terraform Init
+            inputs:
+              command: init
+              workingDirectory: $(System.DefaultWorkingDirectory)/example
+              backendType: gcs
+              backendGcsCredentials: $(authenticationFileName)
+              backendGcsBucket: $(gcp_bucket)
+              backendGcsPrefix: $(projectId)/$(platformName)/network.infrax.tfstate
 
-    - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-      displayName: Terraform Plan
-      inputs:
-        command: plan
-        workingDirectory: $(System.DefaultWorkingDirectory)/example
-        providerGoogleCredentials: $(authenticationFileName)
-        providerGoogleProject: $(projectName)
-        providerGoogleRegion: $(region)
-        commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
+          - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+            displayName: Terraform Plan
+            inputs:
+              command: plan
+              workingDirectory: $(System.DefaultWorkingDirectory)/example
+              providerGoogleCredentials: $(authenticationFileName)
+              providerGoogleProject: $(projectName)
+              providerGoogleRegion: $(region)
+              commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
 
-    - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-      displayName: Terraform Apply
-      inputs:
-        command: apply
-        workingDirectory: $(System.DefaultWorkingDirectory)/example
-        providerGoogleCredentials: $(authenticationFileName)
-        providerGoogleProject: $(projectName)
-        providerGoogleRegion: $(region)
-        commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
+          - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+            displayName: Terraform Apply
+            inputs:
+              command: apply
+              workingDirectory: $(System.DefaultWorkingDirectory)/example
+              providerGoogleCredentials: $(authenticationFileName)
+              providerGoogleProject: $(projectName)
+              providerGoogleRegion: $(region)
+              commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
