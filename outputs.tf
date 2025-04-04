@@ -1,25 +1,25 @@
 output "account_id" {
-  value       = join("", google_service_account.service_account[*].id)
+  value       = join("", google_service_account.service_accounts[*].id)
   description = "an identifier for the resource with format"
 }
 
 output "account_email" {
-  value       = join("", google_service_account.service_account[*].email)
+  value       = join("", google_service_account.service_accounts[*].email)
   description = "The e-mail address of the service account. "
 }
 
 output "account_name" {
-  value       = join("", google_service_account.service_account[*].name)
+  value       = join("", google_service_account.service_accounts[*].name)
   description = "The fully-qualified name of the service account."
 }
 
 output "account_unique_id" {
-  value       = join("", google_service_account.service_account[*].unique_id)
+  value       = join("", google_service_account.service_accounts[*].unique_id)
   description = "The unique id of the service account. "
 }
 
 output "id" {
-  value       = join("", google_service_account_iam_binding.admin-account-iam[*].id)
+  value       = join("", google_service_account_iam_binding.admin_account_iam[*].id)
   description = "The iam  id of the service account."
 }
 
@@ -55,11 +55,11 @@ output "valid_before" {
 }
 
 output "etag" {
-  value       = join("", compact(google_service_account_iam_binding.admin-account-iam[*].etag))
+  value       = join("", compact(google_service_account_iam_binding.admin_account_iam[*].etag))
   description = "The etag of the service account IAM policy."
 }
 
 output "roles" {
-  value       = var.roles
+  value       = var.grant_xpn_roles
   description = "The role that should be applied. "
 }
