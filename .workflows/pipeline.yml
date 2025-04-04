@@ -53,11 +53,11 @@ stages:
       - script: |
           cp $(development.secureFilePath) .
 
-  - stage: service-account
+  - stage: service_account
     dependsOn: Prepare
     displayName: service-account
     jobs:
-    - job: service-account
+    - job: service_account
       steps:
       - task: TerraformCLI@0
         displayName: Terraform Initialize
