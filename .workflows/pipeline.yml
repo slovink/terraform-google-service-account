@@ -72,6 +72,11 @@ stages:
       - job: service_account
         displayName: Terraform Job
         steps:
+          - task: TerraformInstaller@1
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: $(terraformVersion)
+
           - script: |
               echo "##vso[task.prependpath]$(Agent.ToolsDirectory)/terraform/$(terraformVersion)/x64"
               terraform version
