@@ -41,7 +41,6 @@ stages:
       - job: prepare
         displayName: Prepare Job
         steps:
-          # Install specific Terraform version and make it available in PATH
           - task: TerraformInstaller@1
             displayName: Install Terraform
             inputs:
@@ -73,6 +72,11 @@ stages:
       - job: service_account
         displayName: Terraform Job
         steps:
+          - script: |
+              echo "##vso[task.prependpath]$(Agent.ToolsDirectory)/terraform/$(terraformVersion)/x64"
+              terraform version
+            displayName: Set Terraform Path Again in Job
+
           - task: TerraformCLI@0
             displayName: Terraform Init
             inputs:
