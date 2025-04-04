@@ -13,7 +13,7 @@ variables:
 - name: gcp_bucket
   value: slovink-hyperscaler
 - name: terraformVersion
-  value : 1.5.4
+  value : 1.9.5
 - name: authenticationFileName
   value: slovink-hyperscaler.json
 - name: projectName
@@ -53,11 +53,11 @@ stages:
       - script: |
           cp $(development.secureFilePath) .
 
-  - stage: Network
+  - stage: service-account
     dependsOn: Prepare
-    displayName: Network
+    displayName: service-account
     jobs:
-    - job: Network
+    - job: service-account
       steps:
       - task: TerraformCLI@0
         displayName: Terraform Initialize
