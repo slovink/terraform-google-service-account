@@ -47,9 +47,9 @@ stages:
               terraformVersion: $(terraformVersion)
 
           - script: |
-              echo "##vso[task.prependpath]$(Agent.ToolsDirectory)/terraform/$(terraformVersion)/x64"
               terraform version
-            displayName: Set Terraform Path and Verify
+              which terraform
+            displayName: Verify Terraform
 
           - script: |
               rm -rf *
@@ -78,9 +78,9 @@ stages:
               terraformVersion: $(terraformVersion)
 
           - script: |
-              echo "##vso[task.prependpath]$(Agent.ToolsDirectory)/terraform/$(terraformVersion)/x64"
               terraform version
-            displayName: Set Terraform Path Again in Job
+              which terraform
+            displayName: Verify Terraform Again
 
           - task: TerraformCLI@0
             displayName: Terraform Init
