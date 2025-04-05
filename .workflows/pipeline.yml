@@ -41,15 +41,14 @@ stages:
       - job: prepare
         displayName: Prepare Job
         steps:
-          - task: TerraformInstaller@1
-            displayName: Install Terraform
-            inputs:
-              terraformVersion: $(terraformVersion)
-
           - script: |
+              echo "Installing Terraform $(terraformVersion)..."
+              curl -sLo terraform.zip https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip
+              unzip -o terraform.zip
+              sudo mv terraform /usr/local/bin/
               terraform version
               which terraform
-            displayName: Verify Terraform
+            displayName: "Install & Verify Terraform"
 
           - script: |
               rm -rf *
@@ -72,15 +71,14 @@ stages:
       - job: service_account
         displayName: Terraform Job
         steps:
-          - task: TerraformInstaller@1
-            displayName: Install Terraform
-            inputs:
-              terraformVersion: $(terraformVersion)
-
           - script: |
+              echo "Installing Terraform $(terraformVersion)..."
+              curl -sLo terraform.zip https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip
+              unzip -o terraform.zip
+              sudo mv terraform /usr/local/bin/
               terraform version
               which terraform
-            displayName: Verify Terraform Again
+            displayName: "Install & Verify Terraform Again"
 
           - task: TerraformCLI@0
             displayName: Terraform Init
