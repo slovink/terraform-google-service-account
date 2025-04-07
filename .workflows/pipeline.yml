@@ -1,3 +1,5 @@
+
+
 parameters:
   - name: agentPool
     type: string
@@ -5,6 +7,11 @@ parameters:
     values:
       - "Azure Pipelines"
       - "Slovink-Selfhosted-Agent"
+  - name: destroy
+    type: string
+    values:
+      - "true"
+      - "false"
 
 trigger:
   - main
@@ -13,7 +20,7 @@ variables:
   - name: gcp_bucket
     value: slovink-hyperscaler
   - name: terraformVersion
-    value: 1.9.5
+    value : 1.9.5
   - name: authenticationFileName
     value: slovink-hyperscaler.json
   - name: projectName
@@ -29,8 +36,9 @@ variables:
   - name: zone
     value: "us-east1-b"
   - name: agentPoolName
-    value: ${{ parameters.agentPool }}
-
+    value:  ${{ parameters.agentPool }}
+  - name: destroy
+    value: ${{ parameters.destroy }}
 pool:
   name: $(agentPoolName)
 
@@ -39,70 +47,80 @@ stages:
     displayName: Initialization
     jobs:
       - job: prepare
-        displayName: Prepare Job
         steps:
-          - script: |
-              echo "Installing Terraform $(terraformVersion)..."
-              curl -sLo terraform.zip https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip
-              unzip -o terraform.zip
-              sudo mv terraform /usr/local/bin/
-              terraform version
-              which terraform
-            displayName: "Install & Verify Terraform"
-
-
-          - script: |
+          - task: TerraformInstaller@1
+            displayName: install terraform
+            inputs:
+              terraformVersion: latest
+          - script:
               rm -rf *
-            displayName: Clean working directory
-
           - task: DownloadSecureFile@1
             name: development
-            displayName: 'Download GCP Service Account Key'
+            displayName: 'get GCP Secrets '
             inputs:
               secureFile: $(authenticationFileName)
-
           - script: |
               cp $(development.secureFilePath) .
-            displayName: Copy service account key to working dir
 
   - stage: service_account
     dependsOn: Prepare
     displayName: Service Account Provisioning
     jobs:
       - job: service_account
-        displayName: Terraform Job
         steps:
-          - task: TerraformInstaller@0
-            displayName: "Install Terraform"
-            inputs:
-              terraformVersion: '$(terraformVersion)'
-
           - task: TerraformCLI@0
-            displayName: Terraform Init
+            displayName: Terraform Initialize
             inputs:
               command: init
               workingDirectory: $(System.DefaultWorkingDirectory)/example
               backendType: gcs
-              backendGcsCredentials: $(authenticationFileName)
+              backendGcsCredentials: $(AuthenticationFileName)
               backendGcsBucket: $(gcp_bucket)
-              backendGcsPrefix: $(projectId)/$(platformName)/network.infrax.tfstate
-
+              backendGcsPrefix: $(ProjectId)/$(PlatformName)/network.infrax.tfstate
           - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-            displayName: Terraform Plan
+            displayName: 'Terraform Plan'
             inputs:
               command: plan
               workingDirectory: $(System.DefaultWorkingDirectory)/example
-              providerGoogleCredentials: $(authenticationFileName)
-              providerGoogleProject: $(projectName)
-              providerGoogleRegion: $(region)
+              # Google Credentials (i.e. for service account) in JSON file format in Azure DevOps Secure Files
+              providerGoogleCredentials: $(AuthenticationFileName)
+              # The default project name where resources are managed. Defining project on a resource takes precedence over this.
+              providerGoogleProject: $(ProjectName)
+              # The default region where resources are managed. Defining region on a resource takes precedence over this.
+              providerGoogleRegion: $(Region)
               commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
-
           - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-            displayName: Terraform Apply
+            displayName: 'terraform Apply'
             inputs:
               command: apply
               workingDirectory: $(System.DefaultWorkingDirectory)/example
-              providerGoogleCredentials: $(authenticationFileName)
-              providerGoogleProject: $(projectName)
-              providerGoogleRegion: $(region)
+              # Google Credentials (i.e. for service account) in JSON file format in Azure DevOps Secure Files
+              providerGoogleCredentials: $(AuthenticationFileName)
+              # The default project name where resources are managed. Defining project on a resource takes precedence over this.
+              providerGoogleProject: $(ProjectName)
+              # The default region where resources are managed. Defining region on a resource takes precedence over this.
+              providerGoogleRegion: $(Region)
               commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
+
+      - job: DestroyNetwork
+        steps:
+          - task: TerraformCLI@0
+            displayName: Terraform Initialize
+            inputs:
+              command: init
+              workingDirectory: $(System.DefaultWorkingDirectory)/example
+              backendType: gcs
+              backendGcsCredentials: $(AuthenticationFileName)
+              backendGcsBucket: $(gcp_bucket)
+              backendGcsPrefix: $(ProjectId)/$(PlatformName)/kubernetes.infrax.tfstate
+
+          - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+            displayName: 'Terraform destroy'
+            condition: eq(variables['destroy'], 'true')
+            inputs:
+              command: destroy
+              workingDirectory: $(System.DefaultWorkingDirectory)/example
+              providerGoogleCredentials: $(AuthenticationFileName)
+              providerGoogleProject: $(ProjectName)
+              providerGoogleRegion: $(Region)
+              commandOptions: '-var "platformName=$(platformName)" -var "projectId=$(ProjectId)" -var "projectName=$(projectName)" -var "region=$(Region)"'
