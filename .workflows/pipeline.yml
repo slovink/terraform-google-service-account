@@ -47,12 +47,18 @@ stages:
     displayName: Initialization
     jobs:
       - job: prepare
+<<<<<<< HEAD
         steps:
           - task: TerraformInstaller@1
             displayName: install terraform
             inputs:
               terraformVersion: latest
           - script:
+=======
+        displayName: Prepare Job
+       
+        - script: |
+>>>>>>> ca44e42bf253a3f8fb37ed04591a0d64924053dc
               rm -rf *
           - task: DownloadSecureFile@1
             name: development
