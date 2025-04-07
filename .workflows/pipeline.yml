@@ -79,7 +79,7 @@ stages:
             displayName: Terraform Plan
             inputs:
               command: plan
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_account
               providerGoogleCredentials: $(authenticationFileName)
               providerGoogleProject: $(projectName)
               providerGoogleRegion: $(region)
