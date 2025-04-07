@@ -79,7 +79,8 @@ stages:
             displayName: Terraform Plan
             inputs:
               command: plan
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_account
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+              environmentServiceNameAzureRM: $(serviceConnection)
               providerGoogleCredentials: $(authenticationFileName)
               providerGoogleProject: $(projectName)
               providerGoogleRegion: $(region)
