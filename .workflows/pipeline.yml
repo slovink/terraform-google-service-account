@@ -40,18 +40,8 @@ stages:
     jobs:
       - job: prepare
         displayName: Prepare Job
-        steps:
-          - script: |
-              echo "Installing Terraform $(terraformVersion)..."
-              curl -sLo terraform.zip https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip
-              unzip -o terraform.zip
-              sudo mv terraform /usr/local/bin/
-              terraform version
-              which terraform
-            displayName: "Install & Verify Terraform"
-
-
-          - script: |
+       
+        - script: |
               rm -rf *
             displayName: Clean working directory
 
