@@ -82,7 +82,7 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.85.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 3.50.0, < 5.11.0 |
 
 ## Modules
 
@@ -119,12 +119,9 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 | <a name="input_name"></a> [name](#input\_name) | Name of the resource. Provided by the client when the resource is created. | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | <a name="input_org_id"></a> [org\_id](#input\_org\_id) | Id of the organization for org-level roles. | `string` | `""` | no |
 | <a name="input_private_key_type"></a> [private\_key\_type](#input\_private\_key\_type) | (Optional) The output format of the private key. TYPE\_GOOGLE\_CREDENTIALS\_FILE is the default output format. | `string` | `"TYPE_GOOGLE_CREDENTIALS_FILE"` | no |
-| <a name="input_project"></a> [project](#input\_project) | GCP Project ID | `string` | n/a | yes |
 | <a name="input_public_key_type"></a> [public\_key\_type](#input\_public\_key\_type) | (Optional) The output format of the public key requested. TYPE\_X509\_PEM\_FILE is the default output format. | `string` | `"TYPE_X509_PEM_FILE"` | no |
-| <a name="input_region"></a> [region](#input\_region) | GCP region | `string` | n/a | yes |
 | <a name="input_repository"></a> [repository](#input\_repository) | Terraform current module repo | `string` | `"https://github.com/slovink/terraform-google-service-account"` | no |
 | <a name="input_service_account"></a> [service\_account](#input\_service\_account) | A list of service accounts with their attributes, including name, display\_name, description, roles, and generate\_keys. | <pre>list(object({<br>    name          = string<br>    display_name  = string<br>    description   = string<br>    roles         = list(string)<br>    generate_keys = bool<br>  }))</pre> | n/a | yes |
-| <a name="input_zone"></a> [zone](#input\_zone) | GCP zone | `string` | n/a | yes |
 
 ## Outputs
 
