@@ -93,3 +93,17 @@ variable "service_account" {
 
   description = "A list of service accounts with their attributes, including name, display_name, description, roles, and generate_keys."
 }
+variable "project" {
+  description = "GCP Project ID"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP region"
+  type        = string
+}
+
+variable "zone" {
+  description = "GCP zone"
+  type        = string
+}
