@@ -1,6 +1,6 @@
 variable "name" {
-  type        = list(string)
-  default     = [""]
+  type        = string
+  default     = ""
   description = "Name of the resource. Provided by the client when the resource is created. "
 }
 
