@@ -39,7 +39,7 @@ locals {
 resource "google_service_account" "service_accounts" {
   for_each = { for account in var.service_account : account.name => account }
 
-  account_id   = format("svc-%s", each.key)
+  account_id   = format("svc-%s", replace(lower(each.key), "[^a-z0-9-]", "-"))
   display_name = each.value.display_name
   description  = each.value.description
   project      = data.google_client_config.current.project
