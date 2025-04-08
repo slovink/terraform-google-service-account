@@ -36,17 +36,15 @@ locals {
   sanitized_service_accounts = {
     for account in var.service_account :
     account.name => {
-      original      = account
-      sanitized_id  = substr(
-        trim(replace(replace(replace(lower(account.name), " ", "-"), "_", "-"), "/[^a-z0-9-]/", ""), "-"),
+      original = account
+      sanitized_id = substr(
+        trim(replace(replace(lower(account.name), " ", "-"), "_", "-"), "-"),
         0,
         30
       )
     }
   }
 }
-
-
 
 #####==============================================================================
 ##### Allows management of a Google Cloud service account.
@@ -59,6 +57,7 @@ resource "google_service_account" "service_accounts" {
   description  = each.value.description
   project      = data.google_client_config.current.project
 }
+
 
 #####==============================================================================
 ##### Managing IAM roles for the service accounts.
@@ -90,7 +89,6 @@ resource "google_project_iam_member" "project_roles" {
   role    = each.value.role
   member  = format("serviceAccount:%s", google_service_account.service_accounts[each.value.name].email)
 }
-
 
 resource "google_organization_iam_member" "billing_user" {
   for_each = local.org_billing ? local.names : toset([]) # Use local.names instead
