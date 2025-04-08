@@ -1,4 +1,4 @@
-  project = "Slovink Hyperscaler"
-  region  = "asia-northeast1"
-  zone    = "asia-northeast1-a"
+project = "Slovink Hyperscaler"
+region  = "asia-northeast1"
+zone    = "asia-northeast1-a"
 
