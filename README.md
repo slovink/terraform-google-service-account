@@ -82,7 +82,7 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.85.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 3.50.0, < 5.11.0 |
 
 ## Modules
 
