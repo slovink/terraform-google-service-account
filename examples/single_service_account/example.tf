@@ -10,7 +10,7 @@ module "service-account" {
   service_account = [
     {
       name          = "test"
-      display_name  = "Single Service Account"
+      display_name  = "Slovink Hyperscaler"
       description   = "Single Account Description"
       roles         = ["roles/viewer"]
       generate_keys = false

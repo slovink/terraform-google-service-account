@@ -12,8 +12,8 @@ module "service-account" {
 
   service_account = [
     {
-      name          = "svc-account-first"
-      display_name  = "First Service Account"
+      name          = "Slovink Hyperscaler"
+      display_name  = "Slovink Hyperscaler"
       description   = "This is the first service account"
       roles         = ["roles/editor", "roles/viewer", "roles/owner"]
       generate_keys = true
