@@ -7,8 +7,7 @@ module "labels" {
   repository  = var.repository
 }
 
-data "google_client_config" "current" {
-}
+data "google_client_config" "current" {}
 
 locals {
   account_billing = var.grant_billing_role && var.billing_account_id != ""
@@ -32,29 +31,19 @@ locals {
       role = pair.role
     }
   ]
-
-  sanitized_service_accounts = {
-    for account in var.service_account :
-    account.name => {
-      original = account
-      sanitized_id = substr(
-        trim(replace(replace(lower(account.name), " ", "-"), "_", "-"), "-"),
-        0,
-        30
-      )
-    }
-  }
 }
+
+
 
 #####==============================================================================
 ##### Allows management of a Google Cloud service account.
 #####==============================================================================
 resource "google_service_account" "service_accounts" {
-  for_each = local.sanitized_service_accounts
+  for_each = { for account in var.service_account : account.name => account }
 
-  account_id   = each.value.sanitized_id
-  display_name = each.value.original.display_name
-  description  = each.value.original.description
+  account_id   = format("svc-%s", each.key)
+  display_name = each.value.display_name
+  description  = each.value.description
   project      = data.google_client_config.current.project
 }
 
@@ -88,6 +77,7 @@ resource "google_project_iam_member" "project_roles" {
   role    = each.value.role
   member  = format("serviceAccount:%s", google_service_account.service_accounts[each.value.name].email)
 }
+
 
 resource "google_organization_iam_member" "billing_user" {
   for_each = local.org_billing ? local.names : toset([]) # Use local.names instead
