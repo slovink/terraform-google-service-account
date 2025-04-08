@@ -127,9 +127,9 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 
 | Name | Description |
 |------|-------------|
+| <a name="output_account_display_name"></a> [account\_display\_name](#output\_account\_display\_name) | Display name of the service account. |
 | <a name="output_account_email"></a> [account\_email](#output\_account\_email) | The e-mail address of the service account. |
 | <a name="output_account_id"></a> [account\_id](#output\_account\_id) | an identifier for the resource with format |
-| <a name="output_account_name"></a> [account\_name](#output\_account\_name) | The fully-qualified name of the service account. |
 | <a name="output_account_unique_id"></a> [account\_unique\_id](#output\_account\_unique\_id) | The unique id of the service account. |
 | <a name="output_etag"></a> [etag](#output\_etag) | The etag of the service account IAM policy. |
 | <a name="output_id"></a> [id](#output\_id) | The iam  id of the service account. |

@@ -8,9 +8,9 @@ output "account_email" {
   description = "The e-mail address of the service account. "
 }
 
-output "account_name" {
-  value       = join("", google_service_account.service_accounts[*].name)
-  description = "The fully-qualified name of the service account."
+output "account_display_name" {
+  value       = google_service_account.service_accounts[*].display_name
+  description = "Display name of the service account."
 }
 
 output "account_unique_id" {
