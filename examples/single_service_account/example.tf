@@ -4,11 +4,9 @@ provider "google" {
   zone    = "asia-northeast1-a"
 }
 
-#####==============================================================================
-##### Single-service-account module call .
-#####==============================================================================
 module "service-account" {
   source = "./../../"
+
   service_account = [
     {
       name          = "test"
@@ -18,5 +16,4 @@ module "service-account" {
       generate_keys = false
     }
   ]
-  roles = []
 }
