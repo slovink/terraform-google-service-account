@@ -50,14 +50,13 @@ locals {
 ##### Allows management of a Google Cloud service account.
 #####==============================================================================
 resource "google_service_account" "service_accounts" {
-  for_each = { for account in var.service_account : account.name => account }
+  for_each = local.sanitized_service_accounts
 
-  account_id   = format("svc-%s", each.key)
-  display_name = each.value.display_name
-  description  = each.value.description
+  account_id   = each.value.sanitized_id
+  display_name = each.value.original.display_name
+  description  = each.value.original.description
   project      = data.google_client_config.current.project
 }
-
 
 #####==============================================================================
 ##### Managing IAM roles for the service accounts.
