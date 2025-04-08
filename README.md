@@ -137,7 +137,6 @@ This Terraform module is provided under the **MIT** License. Please see the [LIC
 | <a name="output_key_name"></a> [key\_name](#output\_key\_name) | The name used for this key pair. |
 | <a name="output_private_key"></a> [private\_key](#output\_private\_key) | The private key in JSON format, base64 encoded. |
 | <a name="output_public_key"></a> [public\_key](#output\_public\_key) | The public key, base64 encoded. |
-| <a name="output_roles"></a> [roles](#output\_roles) | The roles applied to each service account. |
 | <a name="output_valid_after"></a> [valid\_after](#output\_valid\_after) | Timestamp when the key becomes valid (RFC3339 format). |
 | <a name="output_valid_before"></a> [valid\_before](#output\_valid\_before) | Timestamp when the key expires (RFC3339 format). |
 <!-- END_TF_DOCS -->

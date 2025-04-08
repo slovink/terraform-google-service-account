@@ -58,8 +58,8 @@ output "etag" {
   value       = { for k, v in google_service_account_iam_binding.admin_account_iam : k => v.etag }
   description = "The etag of the service account IAM policy."
 }
-
-output "roles" {
-  value       = [for sa in var.service_account : sa.roles]
-  description = "The roles applied to each service account."
-}
+#
+#output "roles" {
+#  value       = [for sa in var.service_account : sa.roles]
+#  description = "The roles applied to each service account."
+#}

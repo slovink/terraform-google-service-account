@@ -28,5 +28,5 @@ module "service-account" {
   ]
 
   # Add dummy value for roles input to satisfy required argument in outputs.tf
-  roles = []
+  #  roles = []
 }

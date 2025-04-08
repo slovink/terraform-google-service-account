@@ -93,8 +93,6 @@ variable "service_account" {
   }))
 }
 
-
-
 #variable "roles" {
 #  type        = list(string)
 #  description = "The role that should be applied."
