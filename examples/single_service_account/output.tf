@@ -9,7 +9,7 @@ output "account_unique_id" {
 }
 
 output "account_display_name" {
-  value       = module.service-account.account_display_name
+  value       = module.service-account.account_name
   description = "The display name of the service account."
 }
 

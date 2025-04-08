@@ -14,9 +14,9 @@ module "service-account" {
       name          = "test"
       display_name  = "Single Service Account"
       description   = "Single Account Description"
-      roles         = ["roles/viewer"] # Single role
+      roles         = ["roles/viewer"]
       generate_keys = false
     }
-
   ]
+  roles = []
 }

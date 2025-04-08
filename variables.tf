@@ -83,13 +83,19 @@ variable "org_id" {
 }
 
 variable "service_account" {
+  description = "List of service accounts to create"
   type = list(object({
     name          = string
     display_name  = string
     description   = string
-    roles         = list(string)
+    roles         = list(string) # roles is part of each object
     generate_keys = bool
   }))
-
-  description = "A list of service accounts with their attributes, including name, display_name, description, roles, and generate_keys."
 }
+
+
+
+#variable "roles" {
+#  type        = list(string)
+#  description = "The role that should be applied."
+#}

@@ -1,65 +1,65 @@
 output "account_id" {
-  value       = join("", google_service_account.service_accounts[*].id)
-  description = "an identifier for the resource with format"
+  value       = { for k, sa in google_service_account.service_accounts : k => sa.id }
+  description = "An identifier for the service account resource."
 }
 
 output "account_email" {
-  value       = join("", google_service_account.service_accounts[*].email)
-  description = "The e-mail address of the service account. "
+  value       = { for k, sa in google_service_account.service_accounts : k => sa.email }
+  description = "The e-mail address of the service account."
 }
 
-output "account_display_name" {
-  value       = google_service_account.service_accounts[*].display_name
-  description = "Display name of the service account."
+output "account_name" {
+  value       = { for k, sa in google_service_account.service_accounts : k => sa.name }
+  description = "The fully-qualified name of the service account."
 }
 
 output "account_unique_id" {
-  value       = join("", google_service_account.service_accounts[*].unique_id)
-  description = "The unique id of the service account. "
+  value       = { for k, sa in google_service_account.service_accounts : k => sa.unique_id }
+  description = "The unique ID of the service account."
 }
 
 output "id" {
-  value       = join("", google_service_account_iam_binding.admin_account_iam[*].id)
-  description = "The iam  id of the service account."
+  value       = { for k, v in google_service_account_iam_binding.admin_account_iam : k => v.id }
+  description = "The IAM binding ID of the service account."
 }
 
 output "key_id" {
-  value       = join("", google_service_account_key.mykey[*].id)
-  description = "An identifier for the  key_id resource with format"
+  value       = { for k, key in google_service_account_key.mykey : k => key.id }
+  description = "An identifier for the service account key resource."
 }
 
 output "key_name" {
-  value       = join("", google_service_account_key.mykey[*].name)
-  description = "The name used for this key pair"
+  value       = { for k, key in google_service_account_key.mykey : k => key.name }
+  description = "The name used for this key pair."
 }
 
 output "public_key" {
-  value       = join("", google_service_account_key.mykey[*].public_key)
-  description = "The public key, base64 encoded"
+  value       = { for k, key in google_service_account_key.mykey : k => key.public_key }
+  description = "The public key, base64 encoded."
 }
 
 output "private_key" {
-  value       = join("", google_service_account_key.mykey[*].private_key)
-  description = "The private key in JSON format, base64 encoded. This is what you normally get as a file when creating service account keys through the CLI or web console. This is only populated when creating a new key."
+  value       = { for k, key in google_service_account_key.mykey : k => key.private_key }
+  description = "The private key in JSON format, base64 encoded."
   sensitive   = true
 }
 
 output "valid_after" {
-  value       = join("", google_service_account_key.mykey[*].valid_after)
-  description = "The key can be used after this timestamp. A timestamp in RFC3339 UTC Zulu format, accurate to nanoseconds. "
+  value       = { for k, key in google_service_account_key.mykey : k => key.valid_after }
+  description = "Timestamp when the key becomes valid (RFC3339 format)."
 }
 
 output "valid_before" {
-  value       = join("", google_service_account_key.mykey[*].valid_before)
-  description = " The key can be used before this timestamp. A timestamp in RFC3339 UTC Zulu format, accurate to nanoseconds."
+  value       = { for k, key in google_service_account_key.mykey : k => key.valid_before }
+  description = "Timestamp when the key expires (RFC3339 format)."
 }
 
 output "etag" {
-  value       = join("", compact(google_service_account_iam_binding.admin_account_iam[*].etag))
+  value       = { for k, v in google_service_account_iam_binding.admin_account_iam : k => v.etag }
   description = "The etag of the service account IAM policy."
 }
 
 output "roles" {
-  value       = var.grant_xpn_roles
-  description = "The role that should be applied. "
+  value       = [for sa in var.service_account : sa.roles]
+  description = "The roles applied to each service account."
 }
