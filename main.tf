@@ -7,7 +7,8 @@ module "labels" {
   repository  = var.repository
 }
 
-data "google_client_config" "current" {}
+data "google_client_config" "current" {
+}
 
 locals {
   account_billing = var.grant_billing_role && var.billing_account_id != ""
@@ -31,6 +32,18 @@ locals {
       role = pair.role
     }
   ]
+
+  sanitized_service_accounts = {
+    for account in var.service_account :
+    account.name => {
+      original      = account
+      sanitized_id  = substr(
+        trim(replace(replace(replace(lower(account.name), " ", "-"), "_", "-"), "/[^a-z0-9-]/", ""), "-"),
+        0,
+        30
+      )
+    }
+  }
 }
 
 
