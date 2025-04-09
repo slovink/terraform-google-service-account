@@ -33,42 +33,41 @@ locals {
     }
   ]
 
-  sanitized_service_accounts = {
-    for account in var.service_account :
-    account.name => {
-      original = account
-      sanitized_id = substr(
-        trim(
-          replace(
-            replace(
-              replace(lower(account.name), " ", "-"),
-              "_", "-"
-            ),
-            ".", "-"
-          ),
-          "-"
-        ),
-        0,
-        30
-      )
-    }
-  }
-
-
+#  sanitized_service_accounts = {
+#    for account in var.service_account :
+#    account.name => {
+#      original = account
+#      sanitized_id = substr(
+#        trim(
+#          replace(
+#            replace(
+#              replace(lower(account.name), " ", "-"),
+#              "_", "-"
+#            ),
+#            ".", "-"
+#          ),
+#          "-"
+#        ),
+#        0,
+#        30
+#      )
+#    }
+#  }
+#
+#
 }
 
 #####==============================================================================
 ##### Allows management of a Google Cloud service account.
 #####==============================================================================
-resource "google_service_account" "service_accounts" {
-  for_each = local.sanitized_service_accounts
+resource "google_service_account" "default" {
+  count = var.service_account_enabled && var.module_enabled ? 1 : 0
 
-  account_id   = each.value.sanitized_id
-  display_name = each.value.original.display_name
-  description  = each.value.original.description
-  project      = data.google_client_config.current.project
+  account_id   = module.labels.id
+  display_name = module.labels.id
+  description  = var.description
+  project      = var.project_id
 }
-
 #####==============================================================================
 ##### Managing IAM roles for the service accounts.
 #####==============================================================================

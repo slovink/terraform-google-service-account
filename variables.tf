@@ -97,3 +97,23 @@ variable "service_account" {
 #  type        = list(string)
 #  description = "The role that should be applied."
 #}
+variable "project_id" {
+  type        = string
+  default     = ""
+  description = "The project in which the resource belongs. If it is not provided, the provider project is used."
+}
+variable "description" {
+  type        = string
+  default     = "Managed by clouddrove"
+  description = "A text description of the service account."
+}
+variable "service_account_enabled" {
+  type        = bool
+  default     = true
+  description = "Flag to control the service_account_enabled creation."
+}
+variable "module_enabled" {
+  type        = bool
+  default     = true
+  description = "Flag to control the service_account_enabled creation."
+}
