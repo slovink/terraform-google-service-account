@@ -38,18 +38,22 @@ locals {
     account.name => {
       original = account
       sanitized_id = substr(
-        regex_replace_all(
-          regex_replace_all(
-            lower(account.name),
-            "[^a-z0-9-]", "-"
+        trim(
+          replace(
+            replace(
+              replace(lower(account.name), " ", "-"),
+              "_", "-"
+            ),
+            ".", "-"
           ),
-          "^-+|-+$", ""
+          "-"
         ),
         0,
         30
       )
     }
   }
+
 
 }
 
