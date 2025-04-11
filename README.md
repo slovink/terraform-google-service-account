@@ -12,7 +12,7 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v1.7.4-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v1.9.5-green" alt="Terraform">
 </a>
 <a href="https://github.com/slovink/terraform-google-service-account/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
