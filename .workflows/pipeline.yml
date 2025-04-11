@@ -67,6 +67,12 @@ stages:
               terraformVersion: $(terraformVersion)
 
           - task: TerraformCLI@0
+            displayName: Terraform Validate
+            inputs:
+              command: validate
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+
+          - task: TerraformCLI@0
             displayName: Terraform Init
             inputs:
               command: init
