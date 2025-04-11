@@ -71,12 +71,11 @@ stages:
             inputs:
               command: validate
               workingDirectory: $(System.DefaultWorkingDirectory)/examples
-
           - task: TerraformCLI@0
             displayName: Terraform Init
             inputs:
               command: init
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
               backendType: gcs
               backendGcsCredentials: $(authenticationFileName)
               backendGcsBucket: $(gcp_bucket)
@@ -86,7 +85,7 @@ stages:
             displayName: Terraform Plan
             inputs:
               command: plan
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
               providerGoogleCredentials: $(authenticationFileName)
               providerGoogleProject: $(projectName)
               providerGoogleRegion: $(region)
@@ -96,7 +95,7 @@ stages:
             displayName: Terraform Apply
             inputs:
               command: apply
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
               providerGoogleCredentials: $(authenticationFileName)
               providerGoogleProject: $(projectName)
               providerGoogleRegion: $(region)
