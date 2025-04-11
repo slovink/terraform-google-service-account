@@ -79,7 +79,7 @@ stages:
               backendType: gcs
               backendGcsCredentials: $(authenticationFileName)
               backendGcsBucket: $(gcp_bucket)
-              backendGcsPrefix: $(projectId)/$(platformName)/network.infrax.tfstate
+              backendGcsPrefix: $(projectId)/$(platformName)/service_account.infrax.tfstate
 
           - task: TerraformCLI@0
             displayName: Terraform Plan
