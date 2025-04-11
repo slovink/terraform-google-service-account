@@ -1,4 +1,5 @@
 provider "google" {
+  credentials = file("${path.module}/slovink-hyperscaler.json")
   project = "Slovink Hyperscaler"
   region  = "asia-northeast1"
   zone    = "asia-northeast1-a"
