@@ -1,3 +1,5 @@
+
+
 parameters:
   - name: agentPool
     type: string
@@ -5,6 +7,11 @@ parameters:
     values:
       - "Azure Pipelines"
       - "Slovink-Selfhosted-Agent"
+  - name: destroy
+    type: string
+    values:
+      - "true"
+      - "false"
 
 trigger:
   - main
@@ -13,7 +20,7 @@ variables:
   - name: gcp_bucket
     value: slovink-hyperscaler
   - name: terraformVersion
-    value: 1.9.5
+    value : 1.9.5
   - name: authenticationFileName
     value: slovink-hyperscaler.json
   - name: projectName
@@ -29,8 +36,9 @@ variables:
   - name: zone
     value: "us-east1-b"
   - name: agentPoolName
-    value: ${{ parameters.agentPool }}
-
+    value:  ${{ parameters.agentPool }}
+  - name: destroy
+    value: ${{ parameters.destroy }}
 pool:
   name: $(agentPoolName)
 
@@ -41,23 +49,18 @@ stages:
       - job: prepare
         steps:
           - task: TerraformInstaller@1
-            displayName: Install Terraform
+            displayName: install terraform
             inputs:
-              terraformVersion: $(terraformVersion)
-
-          - script: |
+              terraformVersion: latest
+          - script:
               rm -rf *
-            displayName: Clean workspace
-
           - task: DownloadSecureFile@1
             name: development
-            displayName: Get GCP Secrets
+            displayName: 'get GCP Secrets '
             inputs:
               secureFile: $(authenticationFileName)
-
           - script: |
               cp $(development.secureFilePath) .
-            displayName: Copy secrets file to workspace
 
   - stage: service_account
     dependsOn: Prepare
@@ -69,29 +72,33 @@ stages:
             displayName: Terraform Initialize
             inputs:
               command: init
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples
               backendType: gcs
-              backendGcsCredentials: $(authenticationFileName)
+              backendGcsCredentials: $(AuthenticationFileName)
               backendGcsBucket: $(gcp_bucket)
-              backendGcsPrefix: $(projectId)/$(platformName)/network.infrax.tfstate
-
+              backendGcsPrefix: $(ProjectId)/$(PlatformName)/network.infrax.tfstate
           - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-            displayName: Terraform Plan
+            displayName: 'Terraform Plan'
             inputs:
               command: plan
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
-              environmentServiceNameAzureRM: $(serviceConnection)
-              providerGoogleCredentials: $(authenticationFileName)
-              providerGoogleProject: $(projectName)
-              providerGoogleRegion: $(region)
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+              # Google Credentials (i.e. for service account) in JSON file format in Azure DevOps Secure Files
+              providerGoogleCredentials: $(AuthenticationFileName)
+              # The default project name where resources are managed. Defining project on a resource takes precedence over this.
+              providerGoogleProject: $(ProjectName)
+              # The default region where resources are managed. Defining region on a resource takes precedence over this.
+              providerGoogleRegion: $(Region)
               commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
-
           - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-            displayName: Terraform Apply
+            displayName: 'terraform Apply'
             inputs:
               command: apply
-              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
-              providerGoogleCredentials: $(authenticationFileName)
-              providerGoogleProject: $(projectName)
-              providerGoogleRegion: $(region)
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+              # Google Credentials (i.e. for service account) in JSON file format in Azure DevOps Secure Files
+              providerGoogleCredentials: $(AuthenticationFileName)
+              # The default project name where resources are managed. Defining project on a resource takes precedence over this.
+              providerGoogleProject: $(ProjectName)
+              # The default region where resources are managed. Defining region on a resource takes precedence over this.
+              providerGoogleRegion: $(Region)
               commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
+
