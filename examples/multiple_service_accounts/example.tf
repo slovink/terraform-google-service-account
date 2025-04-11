@@ -1,9 +1,9 @@
 provider "google" {
-  credentials = file("${path.module}/slovink-hyperscaler.json")
-  project = "Slovink Hyperscaler"
-  region  = "asia-northeast1"
-  zone    = "asia-northeast1-a"
+  project = "slovink-hyperscaler"
+  region  = "us-east1"
+  zone    = "us-east1-b"
 }
+
 
 #####==============================================================================
 ##### Multiple-service-account module call .
