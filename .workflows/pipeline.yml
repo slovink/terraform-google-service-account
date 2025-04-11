@@ -75,23 +75,20 @@ stages:
               backendGcsBucket: $(gcp_bucket)
               backendGcsPrefix: $(projectId)/$(platformName)/network.infrax.tfstate
 
-          - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+          - task: TerraformCLI@0
             displayName: Terraform Plan
             inputs:
-              command: plan
+              provider: 'google'
+              command: 'plan'
               workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
-              environmentServiceNameAzureRM: $(serviceConnection)
-              providerGoogleCredentials: $(authenticationFileName)
-              providerGoogleProject: $(projectName)
-              providerGoogleRegion: $(region)
+              environmentServiceNameGCP: 'Your-GCP-Service-Connection-Name'
               commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
 
-          - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+          - task: TerraformCLI@0
             displayName: Terraform Apply
             inputs:
-              command: apply
+              provider: 'google'
+              command: 'apply'
               workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
-              providerGoogleCredentials: $(authenticationFileName)
-              providerGoogleProject: $(projectName)
-              providerGoogleRegion: $(region)
+              environmentServiceNameGCP: 'Your-GCP-Service-Connection-Name'
               commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
