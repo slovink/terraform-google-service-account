@@ -70,11 +70,11 @@ stages:
             inputs:
               terraformVersion: $(terraformVersion)
 
-          - script: |
-              echo "Setting GOOGLE_APPLICATION_CREDENTIALS env var"
-              export GOOGLE_APPLICATION_CREDENTIALS=$(System.DefaultWorkingDirectory)/$(authenticationFileName)
-              echo "export GOOGLE_APPLICATION_CREDENTIALS=$(System.DefaultWorkingDirectory)/$(authenticationFileName)" >> $BASH_ENV
-            displayName: Export GOOGLE_APPLICATION_CREDENTIALS
+#          - script: |
+#              echo "Setting GOOGLE_APPLICATION_CREDENTIALS env var"
+#              export GOOGLE_APPLICATION_CREDENTIALS=$(System.DefaultWorkingDirectory)/$(authenticationFileName)
+#              echo "export GOOGLE_APPLICATION_CREDENTIALS=$(System.DefaultWorkingDirectory)/$(authenticationFileName)" >> $BASH_ENV
+#            displayName: Export GOOGLE_APPLICATION_CREDENTIALS
 
           - task: TerraformCLI@0
             displayName: Terraform Initialize
