@@ -1,5 +1,4 @@
 
-
 parameters:
   - name: agentPool
     type: string
@@ -7,11 +6,6 @@ parameters:
     values:
       - "Azure Pipelines"
       - "Slovink-Selfhosted-Agent"
-  - name: destroy
-    type: string
-    values:
-      - "true"
-      - "false"
 
 trigger:
   - main
@@ -20,7 +14,7 @@ variables:
   - name: gcp_bucket
     value: slovink-hyperscaler
   - name: terraformVersion
-    value : 1.9.5
+    value : 1.5.4
   - name: authenticationFileName
     value: slovink-hyperscaler.json
   - name: projectName
@@ -37,8 +31,6 @@ variables:
     value: "us-east1-b"
   - name: agentPoolName
     value:  ${{ parameters.agentPool }}
-  - name: destroy
-    value: ${{ parameters.destroy }}
 pool:
   name: $(agentPoolName)
 
@@ -101,4 +93,3 @@ stages:
               # The default region where resources are managed. Defining region on a resource takes precedence over this.
               providerGoogleRegion: $(Region)
               commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
-
