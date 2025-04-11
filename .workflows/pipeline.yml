@@ -56,7 +56,7 @@ stages:
               secureFile: $(authenticationFileName)
 
           - script: |
-              cp $(development.secureFilePath) .
+              cp $(development.secureFilePath) $(System.DefaultWorkingDirectory)/$(authenticationFileName)
             displayName: Copy secrets file to workspace
 
   - stage: service_account
