@@ -13,14 +13,14 @@ module "service-account" {
 
   service_account = [
     {
-      name          = "Slovink Hyperscaler"
+      name          = "Slovink Hyperscaler1"
       display_name  = "Slovink Hyperscaler"
       description   = "This is the first service account"
       roles         = ["roles/editor", "roles/viewer", "roles/owner"]
       generate_keys = true
     },
     {
-      name          = "svc-account-second"
+      name          = "svc-account-second1"
       display_name  = "Second Service Account"
       description   = "This is the second service account"
       roles         = ["roles/editor"]
