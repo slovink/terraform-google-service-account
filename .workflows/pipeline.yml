@@ -1,0 +1,102 @@
+parameters:
+  - name: agentPool
+    type: string
+    default: Azure Pipelines
+    values:
+      - "Azure Pipelines"
+      - "Slovink-Selfhosted-Agent"
+
+trigger:
+  - main
+
+variables:
+  - name: gcp_bucket
+    value: slovink-hyperscaler
+  - name: terraformVersion
+    value: 1.9.5
+  - name: authenticationFileName
+    value: slovink-hyperscaler.json
+  - name: projectName
+    value: "Slovink hyperscaler"
+  - name: projectId
+    value: "slovink-hyperscaler"
+  - name: platformName
+    value: "google"
+  - name: environment
+    value: "development"
+  - name: region
+    value: "us-east1"
+  - name: zone
+    value: "us-east1-b"
+  - name: agentPoolName
+    value:  ${{ parameters.agentPool }}
+
+pool:
+  name: $(agentPoolName)
+
+stages:
+  - stage: Prepare
+    displayName: Initialization
+    jobs:
+      - job: prepare
+        steps:
+          - task: TerraformInstaller@1
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: $(terraformVersion)
+
+          - task: DownloadSecureFile@1
+            name: development
+            displayName: 'Get GCP Secrets'
+            inputs:
+              secureFile: $(authenticationFileName)
+
+          - script: |
+              echo "Copying GCP credentials"
+              cp $(development.secureFilePath) .
+
+  - stage: service_account
+    dependsOn: Prepare
+    displayName: Service Account Provisioning
+    jobs:
+      - job: service_account
+        steps:
+          - task: TerraformInstaller@1
+            displayName: Ensure Terraform is Available
+            inputs:
+              terraformVersion: $(terraformVersion)
+
+          - task: TerraformCLI@0
+            displayName: Terraform Validate
+            inputs:
+              command: validate
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples
+          - task: TerraformCLI@0
+            displayName: Terraform Init
+            inputs:
+              command: init
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
+              backendType: gcs
+              backendGcsCredentials: $(authenticationFileName)
+              backendGcsBucket: $(gcp_bucket)
+              backendGcsPrefix: $(projectId)/$(platformName)/service_account.infrax.tfstate
+
+          - task: TerraformCLI@0
+            displayName: Terraform Plan
+            inputs:
+              command: plan
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
+              providerGoogleCredentials: $(authenticationFileName)
+              providerGoogleProject: $(projectName)
+              providerGoogleRegion: $(region)
+              commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
+
+          - task: TerraformCLI@0
+            displayName: Terraform Apply
+            inputs:
+              command: apply
+              workingDirectory: $(System.DefaultWorkingDirectory)/examples/multiple_service_accounts
+              providerGoogleCredentials: $(authenticationFileName)
+              providerGoogleProject: $(projectName)
+              providerGoogleRegion: $(region)
+              commandOptions: '-var-file="$(System.DefaultWorkingDirectory)/terraform.tfvars"'
